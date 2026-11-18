@@ -1,4 +1,4 @@
-export class Canvas {
+export class Graphics {
   width: number;
   height: number;
   id: string;
@@ -31,5 +31,15 @@ export class Canvas {
 
   printText(x: number, y: number, text: string) {
     this.ctx.fillText(text, x, y);
+  }
+
+  clearScreen(color = "black") {
+    this.ctx.fillStyle = color;
+    this.ctx.fillRect(0, 0, this.width, this.height);
+  }
+
+  drawRect(x: number, y: number, width: number, height: number, color: string) {
+    this.ctx.fillStyle = color;
+    this.ctx.fillRect(x, y, width, height);
   }
 }
