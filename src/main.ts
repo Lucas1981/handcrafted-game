@@ -5,34 +5,49 @@ import {
   getGameState,
   handleTitleScreen,
   handleMainLoop,
+  handleReadyState,
 } from "./handlers";
+import { Sound } from "./sound";
+import { Player } from "./agents/player";
 
-const graphics = new Graphics(800, 600, "canvas");
-const input = new Input();
+const main = async () => {
+  const graphics = new Graphics(800, 600, "canvas");
+  const input = new Input();
+  const sound = new Sound();
+  const player = new Player(100, 100, 32, 32, graphics, input, sound);
+  const agents = [player];
 
-let now = performance.now();
+  await sound.loaded();
 
-const main = () => {
-  const next = performance.now();
-  const elapsedTime = next - now;
-  now = next;
+  let now = performance.now();
+  const loop = () => {
+    const next = performance.now();
+    const elapsedTime = next - now;
+    now = next;
 
-  graphics.clearScreen();
+    graphics.clearScreen();
 
-  const gameState = getGameState();
+    const gameState = getGameState();
 
-  switch (gameState) {
-    case GameState.TitleScreen:
-      handleTitleScreen(graphics, input);
-      break;
-    case GameState.MainLoop:
-      handleMainLoop(graphics, input, elapsedTime);
-      break;
-    default:
-      throw new Error("Illegal game state");
-  }
+    switch (gameState) {
+      case GameState.TitleScreen:
+        handleTitleScreen(graphics, input);
+        break;
+      case GameState.Ready:
+        handleReadyState(graphics, agents);
+        break;
+      case GameState.MainLoop:
+        handleMainLoop(agents, elapsedTime);
+        break;
+      default:
+        throw new Error("Illegal game state");
+    }
 
-  requestAnimationFrame(main);
+    sound.playSounds();
+    requestAnimationFrame(loop);
+  };
+
+  loop();
 };
 
 main();

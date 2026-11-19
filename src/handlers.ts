@@ -1,3 +1,4 @@
+import type { IAgent } from "./agent";
 import { Graphics } from "./graphics";
 import { Input } from "./input";
 import { mainLoop } from "./loop";
@@ -14,22 +15,31 @@ export enum GameState {
 }
 
 let gameState: GameState = GameState.TitleScreen;
+let changedState: number = performance.now();
+const threshold = 1500;
 
 export const getGameState = () => gameState;
-export const setGameState = (newGameState: GameState) =>
-  (gameState = newGameState);
+export const changeGameState = (newGameState: GameState) => {
+  changedState = performance.now();
+  gameState = newGameState;
+};
 
 export const handleTitleScreen = (graphics: Graphics, input: Input) => {
   graphics.printText(400, 200, "Press space bar to start", "white");
   if (input.spaceBar) {
-    setGameState(GameState.MainLoop);
+    changeGameState(GameState.Ready);
   }
 };
 
-export const handleMainLoop = (
-  graphics: Graphics,
-  input: Input,
-  elapsedTime: number,
-) => {
-  mainLoop(graphics, input, elapsedTime);
+export const handleReadyState = (graphics: Graphics, agents: IAgent[]) => {
+  graphics.printText(400, 200, "Get ready!", "white");
+  mainLoop(agents, 0);
+  const now = performance.now();
+  if (now - changedState > threshold) {
+    changeGameState(GameState.MainLoop);
+  }
+};
+
+export const handleMainLoop = (agents: IAgent[], elapsedTime: number) => {
+  mainLoop(agents, elapsedTime);
 };
