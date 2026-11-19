@@ -9,15 +9,25 @@ import {
 } from "./handlers";
 import { Sound } from "./sound";
 import { Player } from "./agents/player";
+import { loadAnimations, type AnimationsType } from "./animation";
 
 const main = async () => {
   const graphics = new Graphics(800, 600, "canvas");
   const input = new Input();
   const sound = new Sound();
-  const player = new Player(100, 100, 32, 32, graphics, input, sound);
-  const agents = [player];
-
   await sound.loaded();
+  const animations: AnimationsType = await loadAnimations();
+  const player = new Player(
+    100,
+    100,
+    64,
+    64,
+    graphics,
+    input,
+    sound,
+    animations,
+  );
+  const agents = [player];
 
   let now = performance.now();
   const loop = () => {

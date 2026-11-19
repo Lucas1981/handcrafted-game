@@ -33,7 +33,7 @@ export const handleTitleScreen = (graphics: Graphics, input: Input) => {
 
 export const handleReadyState = (graphics: Graphics, agents: IAgent[]) => {
   graphics.printText(400, 200, "Get ready!", "white");
-  mainLoop(agents, 0);
+  mainLoop(agents, 0, false);
   const now = performance.now();
   if (now - changedState > threshold) {
     changeGameState(GameState.MainLoop);
