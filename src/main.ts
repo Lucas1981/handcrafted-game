@@ -1,6 +1,11 @@
 import { Graphics } from "./graphics";
 import { Input } from "./input";
-import { mainLoop } from "./loop";
+import {
+  GameState,
+  getGameState,
+  handleTitleScreen,
+  handleMainLoop,
+} from "./handlers";
 
 const graphics = new Graphics(800, 600, "canvas");
 const input = new Input();
@@ -14,7 +19,18 @@ const main = () => {
 
   graphics.clearScreen();
 
-  mainLoop(graphics, input, elapsedTime);
+  const gameState = getGameState();
+
+  switch (gameState) {
+    case GameState.TitleScreen:
+      handleTitleScreen(graphics, input);
+      break;
+    case GameState.MainLoop:
+      handleMainLoop(graphics, input, elapsedTime);
+      break;
+    default:
+      throw new Error("Illegal game state");
+  }
 
   requestAnimationFrame(main);
 };

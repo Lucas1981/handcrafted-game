@@ -29,7 +29,8 @@ export class Graphics {
     return this.height;
   }
 
-  printText(x: number, y: number, text: string) {
+  printText(x: number, y: number, text: string, color = "white") {
+    this.ctx.fillStyle = color;
     this.ctx.fillText(text, x, y);
   }
 

@@ -15,3 +15,4 @@ I wanted to build a game from scratch with TypeScript and document the steps I'd
 11. [ ] Collision. We must be able to handle collision between agents
 12. [ ] Scroll. We want to be able to scroll the screen
 13. [ ] Music. We want to be able to play back music
+14. [ ] A UI layer to display text and status

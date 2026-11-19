@@ -1,3 +1,5 @@
+const DEBUG = false;
+
 export class Input {
   keys: Record<string, boolean> = {};
 
@@ -11,11 +13,34 @@ export class Input {
   }
 
   handleKeydown(e: KeyboardEvent) {
-    console.log(e.key);
+    if (DEBUG) {
+      console.log(e.key);
+    }
+
     this.keys[e.key] = true;
   }
 
   getKeyStatus(key: string) {
     return this.keys[key];
+  }
+
+  get up() {
+    return this.keys["ArrowUp"];
+  }
+
+  get down() {
+    return this.keys["ArrowDown"];
+  }
+
+  get left() {
+    return this.keys["ArrowLeft"];
+  }
+
+  get right() {
+    return this.keys["ArrowRight"];
+  }
+
+  get spaceBar() {
+    return this.keys[" "];
   }
 }
