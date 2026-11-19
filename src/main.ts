@@ -10,6 +10,7 @@ import {
 import { Sound } from "./sound";
 import { Player } from "./agents/player";
 import { loadAnimations, type AnimationsType } from "./animation";
+import { loadGrid } from "./grid";
 
 const main = async () => {
   const graphics = new Graphics(800, 600, "canvas");
@@ -17,9 +18,10 @@ const main = async () => {
   const sound = new Sound();
   await sound.loaded();
   const animations: AnimationsType = await loadAnimations();
+  const grid = await loadGrid("world", graphics, animations);
   const player = new Player(
-    100,
-    100,
+    400,
+    200,
     64,
     64,
     graphics,
@@ -44,10 +46,10 @@ const main = async () => {
         handleTitleScreen(graphics, input);
         break;
       case GameState.Ready:
-        handleReadyState(graphics, agents);
+        handleReadyState(graphics, agents, grid);
         break;
       case GameState.MainLoop:
-        handleMainLoop(agents, elapsedTime);
+        handleMainLoop(agents, grid, elapsedTime);
         break;
       default:
         throw new Error("Illegal game state");

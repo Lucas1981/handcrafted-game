@@ -10,6 +10,8 @@ export const animationsConfig = {
   "player-walking-right": [2, 0, 1, 0],
   "player-walking-up": [10, 11, 9, 11],
   "player-walking-down": [7, 6, 8, 6],
+  "grey-tile": [14],
+  "brick-tile": [13],
 };
 
 const framesPerSecond = 8;
@@ -28,10 +30,12 @@ export class Animation {
     this.numberOfFrames = this.indices.length;
   }
 
-  draw(x: number, y: number, graphics: Graphics, elapsedTime: number) {
+  draw(x: number, y: number, graphics: Graphics, elapsedTime: number = 0) {
     // If we only have one frame in our animation, return it
     const index =
-      this.indices.length === 1 ? 0 : this.determineFrameIndex(elapsedTime);
+      elapsedTime === 0 || this.indices.length === 1
+        ? 0
+        : this.determineFrameIndex(elapsedTime);
     const frame = this.getFrame(index);
 
     // Don't allow float as x or y, so crush them to the floor here to get nice integers.

@@ -31,8 +31,8 @@ I seem to always confuse myself when I set up the animations, so here's a quick 
 7. [x] Agent. We will need to specify agents for our game.
 8. [x] Frames. We will want to make use of frames
 9. [x] Animations. We will then use those frames for animations
-10. [ ] Grid. Our game will be making use of a tile grid
-11. [ ] Collision. We must be able to handle collision between agents
+10. [x] Grid. Our game will be making use of a tile grid
+11. [ ] Collision. We must be able to handle collision between agents and grid
 12. [ ] Scroll. We want to be able to scroll the screen
 13. [ ] Music. We want to be able to play back music
 14. [ ] A UI layer to display text and status

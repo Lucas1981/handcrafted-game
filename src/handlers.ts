@@ -1,5 +1,6 @@
 import type { IAgent } from "./agent";
 import { Graphics } from "./graphics";
+import type { Grid } from "./grid";
 import { Input } from "./input";
 import { mainLoop } from "./loop";
 
@@ -31,15 +32,23 @@ export const handleTitleScreen = (graphics: Graphics, input: Input) => {
   }
 };
 
-export const handleReadyState = (graphics: Graphics, agents: IAgent[]) => {
+export const handleReadyState = (
+  graphics: Graphics,
+  agents: IAgent[],
+  grid: Grid,
+) => {
   graphics.printText(400, 200, "Get ready!", "white");
-  mainLoop(agents, 0, false);
+  mainLoop(agents, grid, 0, false);
   const now = performance.now();
   if (now - changedState > threshold) {
     changeGameState(GameState.MainLoop);
   }
 };
 
-export const handleMainLoop = (agents: IAgent[], elapsedTime: number) => {
-  mainLoop(agents, elapsedTime);
+export const handleMainLoop = (
+  agents: IAgent[],
+  grid: Grid,
+  elapsedTime: number,
+) => {
+  mainLoop(agents, grid, elapsedTime);
 };
