@@ -3,6 +3,13 @@ import type { Graphics } from "../graphics";
 import type { Input } from "../input";
 import { Sounds, type Sound } from "../sound";
 import { type AnimationsType } from "../animation";
+import type { Grid } from "../grid";
+import {
+  isAgentCollidingWithGridLeft,
+  isAgentCollidingWithGridRight,
+  isAgentCollidingWithGridTop,
+  isAgentCollidingWithGridBottom,
+} from "../collision";
 
 const speed = 250;
 const playBumpThreshold = 150;
@@ -22,6 +29,7 @@ const directions = {
 export class Player extends Agent {
   input: Input;
   sound: Sound;
+  grid: Grid;
   animations: AnimationsType;
   screenWidth: number;
   screenHeight: number;
@@ -39,6 +47,7 @@ export class Player extends Agent {
     graphics: Graphics,
     input: Input,
     sound: Sound,
+    grid: Grid,
     animations: AnimationsType,
   ) {
     super(x, y, width, height, graphics);
@@ -49,12 +58,21 @@ export class Player extends Agent {
     this.animations = animations;
     this.lastPlayedBump = performance.now();
     this.animationChanged = performance.now();
+    this.grid = grid;
   }
 
   update(elapsedTime: number) {
     const delta = speed * (elapsedTime / 1000);
 
     this.state = states.standing;
+    this.handleMoveLeft(delta);
+    this.handleMoveRight(delta);
+    this.handleMoveUp(delta);
+    this.handleMoveDown(delta);
+    this.updateAnimation();
+  }
+
+  private handleMoveLeft(delta: number) {
     if (this.input.getKeyStatus("ArrowLeft")) {
       this.state = states.walking;
       this.direction = directions.left;
@@ -63,8 +81,16 @@ export class Player extends Agent {
         this.x = 0;
         this.handlePlayBump();
       }
-    }
 
+      if (isAgentCollidingWithGridLeft(this, this.grid)) {
+        // Restore x to get as close to the tile as we can
+        const gridUnit = this.grid.getUnitSize();
+        this.x = (Math.floor(this.x / gridUnit) + 1) * gridUnit;
+      }
+    }
+  }
+
+  private handleMoveRight(delta: number) {
     if (this.input.getKeyStatus("ArrowRight")) {
       this.state = states.walking;
       this.direction = directions.right;
@@ -74,8 +100,16 @@ export class Player extends Agent {
         this.x = maxWidth;
         this.handlePlayBump();
       }
-    }
 
+      if (isAgentCollidingWithGridRight(this, this.grid)) {
+        // Restore x to get as close to the tile as we can
+        const gridUnit = this.grid.getUnitSize();
+        this.x = Math.floor(this.x / gridUnit) * gridUnit;
+      }
+    }
+  }
+
+  private handleMoveUp(delta: number) {
     if (this.input.getKeyStatus("ArrowUp")) {
       this.state = states.walking;
       this.direction = directions.up;
@@ -84,8 +118,16 @@ export class Player extends Agent {
         this.y = 0;
         this.handlePlayBump();
       }
-    }
 
+      if (isAgentCollidingWithGridTop(this, this.grid)) {
+        // Restore y to get as close to the tile as we can
+        const gridUnit = this.grid.getUnitSize();
+        this.y = (Math.floor(this.y / gridUnit) + 1) * gridUnit;
+      }
+    }
+  }
+
+  private handleMoveDown(delta: number) {
     if (this.input.getKeyStatus("ArrowDown")) {
       this.state = states.walking;
       this.direction = directions.down;
@@ -95,9 +137,13 @@ export class Player extends Agent {
         this.y = maxHeight;
         this.handlePlayBump();
       }
-    }
 
-    this.updateAnimation();
+      if (isAgentCollidingWithGridBottom(this, this.grid)) {
+        // Restore y to get as close to the tile as we can
+        const gridUnit = this.grid.getUnitSize();
+        this.y = Math.floor(this.y / gridUnit) * gridUnit;
+      }
+    }
   }
 
   draw() {

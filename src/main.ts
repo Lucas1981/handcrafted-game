@@ -27,6 +27,7 @@ const main = async () => {
     graphics,
     input,
     sound,
+    grid,
     animations,
   );
   const agents = [player];

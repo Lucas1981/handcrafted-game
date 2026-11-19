@@ -24,6 +24,14 @@ export class Grid {
     this.animations = animations;
   }
 
+  getTile(x: number, y: number) {
+    return this.grid[y][x];
+  }
+
+  getUnitSize() {
+    return this.unitSize;
+  }
+
   draw() {
     for (let y = 0; y < this.grid.length; y++) {
       for (let x = 0; x < this.grid[y].length; x++) {

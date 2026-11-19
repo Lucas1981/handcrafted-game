@@ -1,8 +1,20 @@
 import type { Graphics } from "./graphics";
 
+type BoundingBox = {
+  leftX: number;
+  topY: number;
+  rightX: number;
+  bottomY: number;
+};
+
 export interface IAgent {
   update: (elapsedTime: number) => void;
   draw: () => void;
+  getX: () => number;
+  getY: () => number;
+  getWidth: () => number;
+  getHeight: () => number;
+  getBoundingBox: () => BoundingBox;
 }
 
 export abstract class Agent implements IAgent {
@@ -30,5 +42,27 @@ export abstract class Agent implements IAgent {
 
   draw() {
     this.graphics.drawRect(this.x, this.y, this.width, this.height, "red");
+  }
+
+  getX() {
+    return this.x;
+  }
+  getY() {
+    return this.y;
+  }
+  getWidth() {
+    return this.width;
+  }
+  getHeight() {
+    return this.height;
+  }
+
+  getBoundingBox() {
+    return {
+      leftX: this.x,
+      topY: this.y,
+      rightX: this.x + this.width,
+      bottomY: this.y + this.height,
+    };
   }
 }
