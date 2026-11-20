@@ -15,7 +15,7 @@ export enum GameState {
   GameFinished = 8,
 }
 
-let gameState: GameState = GameState.TitleScreen;
+let gameState: GameState = GameState.MainLoop;
 let changedState: number = performance.now();
 const threshold = 1500;
 

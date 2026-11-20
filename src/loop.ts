@@ -1,6 +1,20 @@
 import { type IAgent } from "./agent";
 import type { Grid } from "./grid";
 
+// It could be preferrable to turn the loop into a class, so that it can retain some state
+export const mainLoop = (
+  agents: IAgent[],
+  grid: Grid,
+  elapsedTime: number,
+  update = true,
+) => {
+  if (update) {
+    updateAgents(agents, elapsedTime);
+  }
+
+  drawAgents(agents, grid);
+};
+
 const determineCameraX = (player: IAgent, grid: Grid) => {
   const gridUnit = grid.getUnitSize();
   const rowSize = grid.getRowSize();
@@ -25,26 +39,34 @@ const determineCameraX = (player: IAgent, grid: Grid) => {
   return 0;
 };
 
-// It could be preferrable to turn the loop into a class, so that it can retain some state
-export const mainLoop = (
-  agents: IAgent[],
-  grid: Grid,
-  elapsedTime: number,
-  update = true,
-) => {
-  if (update) {
-    for (const agent of agents) {
-      agent.update(elapsedTime);
-    }
+const updateAgents = (agents: IAgent[], elapsedTime: number) => {
+  for (const agent of agents) {
+    agent.update(elapsedTime);
   }
+};
 
+const drawAgents = (agents: IAgent[], grid: Grid) => {
   const player = agents[0];
   const cameraX = determineCameraX(player, grid);
 
   grid.draw(cameraX);
 
+  const unitSize = grid.getUnitSize();
+  const halfScreen = Math.floor(
+    ((grid.getTilesPerScreenRow() + 1) * grid.getUnitSize()) / 2,
+  );
+
   for (const agent of agents) {
-    // TODO: Cull agents that fall outside the viewing window
+    // Cull agents that fall outside the viewing window
+    const agentX = agent.getX();
+    const playerX = player.getX();
+    if (
+      agentX + unitSize > playerX + halfScreen ||
+      agentX + unitSize < playerX - halfScreen
+    ) {
+      continue;
+    }
+
     agent.draw(-1 * cameraX);
   }
 };

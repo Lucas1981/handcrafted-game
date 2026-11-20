@@ -9,6 +9,7 @@ import {
 } from "./handlers";
 import { Sound } from "./sound";
 import { Player } from "./agents/player";
+import { Baddy } from "./agents/baddy";
 import { loadAnimations, type AnimationsType } from "./animation";
 import { loadGrid } from "./grid";
 
@@ -27,13 +28,16 @@ const main = async () => {
     200,
     64,
     64,
+    "player",
     graphics,
     input,
     sound,
     grid,
     animations,
   );
-  const agents = [player];
+  const baddy1 = new Baddy(80, 200, 64, 64, graphics, animations, "baddy1");
+  const baddy2 = new Baddy(1060, 200, 64, 64, graphics, animations, "baddy2");
+  const agents = [player, baddy1, baddy2];
 
   let now = performance.now();
   const loop = () => {

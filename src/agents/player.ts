@@ -44,13 +44,14 @@ export class Player extends Agent {
     y: number,
     width: number,
     height: number,
+    name: string,
     graphics: Graphics,
     input: Input,
     sound: Sound,
     grid: Grid,
     animations: AnimationsType,
   ) {
-    super(x, y, width, height, graphics);
+    super(x, y, width, height, graphics, name);
     this.screenWidth = graphics.getWidth();
     this.screenHeight = graphics.getHeight();
     this.input = input;

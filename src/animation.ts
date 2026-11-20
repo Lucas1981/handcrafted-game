@@ -12,6 +12,9 @@ export const animationsConfig = {
   "player-walking-down": [7, 6, 8, 6],
   "grey-tile": [14],
   "brick-tile": [13],
+  "green-dot": [17],
+  "red-dot": [18],
+  "yellow-dot": [19],
 };
 
 const framesPerSecond = 8;

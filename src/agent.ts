@@ -15,6 +15,7 @@ export interface IAgent {
   getWidth: () => number;
   getHeight: () => number;
   getBoundingBox: () => BoundingBox;
+  getName: () => string;
 }
 
 export abstract class Agent implements IAgent {
@@ -23,6 +24,7 @@ export abstract class Agent implements IAgent {
   width: number = 0;
   height: number = 0;
   graphics: Graphics;
+  name: string;
 
   constructor(
     x: number,
@@ -30,12 +32,18 @@ export abstract class Agent implements IAgent {
     width: number,
     height: number,
     graphics: Graphics,
+    name: string,
   ) {
     this.x = x;
     this.y = y;
     this.width = width;
     this.height = height;
     this.graphics = graphics;
+    this.name = name;
+  }
+
+  getName() {
+    return this.name;
   }
 
   update(_: number) {}
