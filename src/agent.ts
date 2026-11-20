@@ -9,7 +9,7 @@ type BoundingBox = {
 
 export interface IAgent {
   update: (elapsedTime: number) => void;
-  draw: () => void;
+  draw: (translateX?: number) => void;
   getX: () => number;
   getY: () => number;
   getWidth: () => number;
@@ -40,8 +40,14 @@ export abstract class Agent implements IAgent {
 
   update(_: number) {}
 
-  draw() {
-    this.graphics.drawRect(this.x, this.y, this.width, this.height, "red");
+  draw(translateX: number = 0) {
+    this.graphics.drawRect(
+      this.x + translateX,
+      this.y,
+      this.width,
+      this.height,
+      "red",
+    );
   }
 
   getX() {

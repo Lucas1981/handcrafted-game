@@ -12,13 +12,16 @@ import { Player } from "./agents/player";
 import { loadAnimations, type AnimationsType } from "./animation";
 import { loadGrid } from "./grid";
 
+const width = 960;
+const height = 640;
+
 const main = async () => {
-  const graphics = new Graphics(800, 600, "canvas");
+  const graphics = new Graphics(width, height, "canvas");
   const input = new Input();
   const sound = new Sound();
   await sound.loaded();
   const animations: AnimationsType = await loadAnimations();
-  const grid = await loadGrid("world", graphics, animations);
+  const grid = await loadGrid("world", graphics, width, animations);
   const player = new Player(
     400,
     200,

@@ -77,15 +77,12 @@ export class Player extends Agent {
       this.state = states.walking;
       this.direction = directions.left;
       this.x -= delta;
-      if (this.x < 0) {
-        this.x = 0;
-        this.handlePlayBump();
-      }
 
       if (isAgentCollidingWithGridLeft(this, this.grid)) {
         // Restore x to get as close to the tile as we can
         const gridUnit = this.grid.getUnitSize();
         this.x = (Math.floor(this.x / gridUnit) + 1) * gridUnit;
+        this.handlePlayBump();
       }
     }
   }
@@ -95,16 +92,12 @@ export class Player extends Agent {
       this.state = states.walking;
       this.direction = directions.right;
       this.x += delta;
-      const maxWidth = this.screenWidth - this.width;
-      if (this.x > maxWidth) {
-        this.x = maxWidth;
-        this.handlePlayBump();
-      }
 
       if (isAgentCollidingWithGridRight(this, this.grid)) {
         // Restore x to get as close to the tile as we can
         const gridUnit = this.grid.getUnitSize();
         this.x = Math.floor(this.x / gridUnit) * gridUnit;
+        this.handlePlayBump();
       }
     }
   }
@@ -114,15 +107,12 @@ export class Player extends Agent {
       this.state = states.walking;
       this.direction = directions.up;
       this.y -= delta;
-      if (this.y < 0) {
-        this.y = 0;
-        this.handlePlayBump();
-      }
 
       if (isAgentCollidingWithGridTop(this, this.grid)) {
         // Restore y to get as close to the tile as we can
         const gridUnit = this.grid.getUnitSize();
         this.y = (Math.floor(this.y / gridUnit) + 1) * gridUnit;
+        this.handlePlayBump();
       }
     }
   }
@@ -132,27 +122,22 @@ export class Player extends Agent {
       this.state = states.walking;
       this.direction = directions.down;
       this.y += delta;
-      const maxHeight = this.screenHeight - this.height;
-      if (this.y > maxHeight) {
-        this.y = maxHeight;
-        this.handlePlayBump();
-      }
 
       if (isAgentCollidingWithGridBottom(this, this.grid)) {
         // Restore y to get as close to the tile as we can
         const gridUnit = this.grid.getUnitSize();
         this.y = Math.floor(this.y / gridUnit) * gridUnit;
+        this.handlePlayBump();
       }
     }
   }
 
-  draw() {
+  draw(translateX: number = 0) {
     const animationKey = `player-${this.state}-${this.direction}`;
-    console.log("animationKey", animationKey);
     const now = performance.now();
     const elapsedTime = now - this.animationChanged;
     this.animations[animationKey].draw(
-      this.x,
+      this.x + translateX,
       this.y,
       this.graphics,
       elapsedTime,

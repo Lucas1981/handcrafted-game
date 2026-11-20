@@ -8,6 +8,7 @@ I wanted to build a game from scratch with TypeScript and document the steps I'd
 - I wonder if the main loop should be a function or a class. It feels so much like it should be a function, but at the same time there are situations where you might want to give it state. For now I guess we are okay without.
 - Is it a good idea to extend the `agent.ts` class to Player, Baddie, etc. classes? It might also make more sense to make the base class very composable and then feed in the properties and logic with some config file.
 - I determine the correct animation frame by looking at the time elapsed between the last state change of an agent and now, and then putting a modulo on this with the maximum amount of frames. That all works, but I wonder how long it would take before that number would overflow, since time will just keep on increasing between those two points. Probably okay if it's decades, but not really okay if it's hours. I should check that.
+- Scrolling is maybe not as hard as I thought. The HTML5 is also forgiving - in comparison to C/C++ arrays for example - where you can just try to paint to off-canvas parts and not get punished. For that reason, you can just compute a camera x position based on your main player position, and then iterate over the grid and offset drawing the grid tiles, together with translating the agents, and you're done. Too many tiles get drawn and just cut by the canvas itself, but the canvas doesn't mind if you try and paint outside of its boundaries. So then scrolling just becomes a formality, calculating the translation x in `determineCameraX` in the `loop.ts` file, and using that calucated cameraX in the call to the `draw` method on the `Grid` class, plus applying it as a translation to the agents. Note: I still have to actually let the agents figure out if they should attempt to draw at all, or if they are off-screen, in which case we shouldn't bother.
 
 ## Some notes on animations
 
@@ -33,6 +34,6 @@ I seem to always confuse myself when I set up the animations, so here's a quick 
 9. [x] Animations. We will then use those frames for animations
 10. [x] Grid. Our game will be making use of a tile grid
 11. [x] Collision. We must be able to handle collision between agents and grid
-12. [ ] Scroll. We want to be able to scroll the screen
+12. [x] Scroll. We want to be able to scroll the screen
 13. [ ] Music. We want to be able to play back music
 14. [ ] A UI layer to display text and status
