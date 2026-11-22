@@ -3,6 +3,8 @@ import { Graphics } from "./graphics";
 import type { Grid } from "./grid";
 import { Input } from "./input";
 import { mainLoop } from "./loop";
+import type { Music } from "./music";
+import { width } from "./main";
 
 export enum GameState {
   TitleScreen = 1,
@@ -15,7 +17,7 @@ export enum GameState {
   GameFinished = 8,
 }
 
-let gameState: GameState = GameState.MainLoop;
+let gameState: GameState = GameState.TitleScreen;
 let changedState: number = performance.now();
 const threshold = 1500;
 
@@ -25,23 +27,30 @@ export const changeGameState = (newGameState: GameState) => {
   gameState = newGameState;
 };
 
-export const handleTitleScreen = (graphics: Graphics, input: Input) => {
-  graphics.printText(400, 200, "Press space bar to start", "white");
+export const handleTitleScreen = (
+  graphics: Graphics,
+  music: Music,
+  input: Input,
+) => {
+  graphics.printText(width / 2, 200, "Press space bar to start", "white");
   if (input.spaceBar) {
     changeGameState(GameState.Ready);
+    music.runAutoplayPolicy();
   }
 };
 
 export const handleReadyState = (
   graphics: Graphics,
   agents: IAgent[],
+  music: Music,
   grid: Grid,
 ) => {
-  graphics.printText(400, 200, "Get ready!", "white");
   mainLoop(agents, grid, 0, false);
+  graphics.printText(width / 2, 200, "Get ready!", "white");
   const now = performance.now();
   if (now - changedState > threshold) {
     changeGameState(GameState.MainLoop);
+    music.playTrack();
   }
 };
 

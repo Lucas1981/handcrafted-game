@@ -35,5 +35,5 @@ I seem to always confuse myself when I set up the animations, so here's a quick 
 10. [x] Grid. Our game will be making use of a tile grid
 11. [x] Collision. We must be able to handle collision between agents and grid
 12. [x] Scroll. We want to be able to scroll the screen
-13. [ ] Music. We want to be able to play back music
+13. [x] Music. We want to be able to play back music
 14. [ ] A UI layer to display text and status

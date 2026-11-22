@@ -30,7 +30,9 @@ export class Graphics {
   }
 
   printText(x: number, y: number, text: string, color = "white") {
+    this.ctx.font = "30px monospace";
     this.ctx.fillStyle = color;
+    this.ctx.textAlign = "center";
     this.ctx.fillText(text, x, y);
   }
 

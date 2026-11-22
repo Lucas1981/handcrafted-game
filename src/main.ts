@@ -12,9 +12,10 @@ import { Player } from "./agents/player";
 import { Baddy } from "./agents/baddy";
 import { loadAnimations, type AnimationsType } from "./animation";
 import { loadGrid } from "./grid";
+import { Music } from "./music";
 
-const width = 960;
-const height = 640;
+export const width = 960;
+export const height = 640;
 
 const main = async () => {
   const graphics = new Graphics(width, height, "canvas");
@@ -23,6 +24,8 @@ const main = async () => {
   await sound.loaded();
   const animations: AnimationsType = await loadAnimations();
   const grid = await loadGrid("world", graphics, width, animations);
+  const music = new Music();
+  await music.loadTrack("track");
   const player = new Player(
     400,
     200,
@@ -51,10 +54,10 @@ const main = async () => {
 
     switch (gameState) {
       case GameState.TitleScreen:
-        handleTitleScreen(graphics, input);
+        handleTitleScreen(graphics, music, input);
         break;
       case GameState.Ready:
-        handleReadyState(graphics, agents, grid);
+        handleReadyState(graphics, agents, music, grid);
         break;
       case GameState.MainLoop:
         handleMainLoop(agents, grid, elapsedTime);
