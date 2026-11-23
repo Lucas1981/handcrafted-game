@@ -8,8 +8,7 @@ import {
   handleReadyState,
 } from "./handlers";
 import { Sound } from "./sound";
-import { Player } from "./agents/player";
-import { Baddy } from "./agents/baddy";
+import { loadAgents } from "./agents/loader";
 import { loadAnimations, type AnimationsType } from "./animation";
 import { loadGrid } from "./grid";
 import { Music } from "./music";
@@ -23,24 +22,17 @@ const main = async () => {
   const sound = new Sound();
   await sound.loaded();
   const animations: AnimationsType = await loadAnimations();
-  const grid = await loadGrid("world", graphics, width, animations);
   const music = new Music();
   await music.loadTrack("track");
-  const player = new Player(
-    400,
-    200,
-    64,
-    64,
-    "player",
+  const grid = await loadGrid("grid", graphics, width, animations);
+  const agents = await loadAgents(
+    "agents",
     graphics,
     input,
     sound,
     grid,
     animations,
   );
-  const baddy1 = new Baddy(80, 200, 64, 64, graphics, animations, "baddy1");
-  const baddy2 = new Baddy(1060, 200, 64, 64, graphics, animations, "baddy2");
-  const agents = [player, baddy1, baddy2];
 
   let now = performance.now();
   const loop = () => {

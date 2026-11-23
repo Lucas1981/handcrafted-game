@@ -4,6 +4,7 @@ import type { Graphics } from "./graphics";
 const tileMap = new Map<number, string>([
   [0, "grey-tile"],
   [1, "brick-tile"],
+  [2, "crate-tile"],
 ]);
 
 export class Grid {
@@ -72,7 +73,7 @@ export const loadGrid = async (
 ) => {
   const unitSize = 64;
   const result = [];
-  const response = await fetch(`./assets/maps/${fileName}.txt`);
+  const response = await fetch(`./assets/world/${fileName}.txt`);
   const content = await response.text();
   const rows = content.split("\n");
 

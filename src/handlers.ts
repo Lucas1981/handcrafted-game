@@ -5,6 +5,7 @@ import { Input } from "./input";
 import { mainLoop } from "./loop";
 import type { Music } from "./music";
 import { width } from "./main";
+import type { LinkedList } from "./data-structures/linked-list";
 
 export enum GameState {
   TitleScreen = 1,
@@ -41,7 +42,7 @@ export const handleTitleScreen = (
 
 export const handleReadyState = (
   graphics: Graphics,
-  agents: IAgent[],
+  agents: LinkedList<IAgent>,
   music: Music,
   grid: Grid,
 ) => {
@@ -55,7 +56,7 @@ export const handleReadyState = (
 };
 
 export const handleMainLoop = (
-  agents: IAgent[],
+  agents: LinkedList<IAgent>,
   grid: Grid,
   elapsedTime: number,
 ) => {

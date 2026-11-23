@@ -1,4 +1,4 @@
-import { Agent } from "../agent";
+import { Agent, AgentType } from "../agent";
 import type { Graphics } from "../graphics";
 import type { Input } from "../input";
 import { Sounds, type Sound } from "../sound";
@@ -26,6 +26,9 @@ const directions = {
   right: "right",
 };
 
+const width = 64;
+const height = 64;
+
 export class Player extends Agent {
   input: Input;
   sound: Sound;
@@ -42,16 +45,13 @@ export class Player extends Agent {
   constructor(
     x: number,
     y: number,
-    width: number,
-    height: number,
-    name: string,
     graphics: Graphics,
     input: Input,
     sound: Sound,
     grid: Grid,
     animations: AnimationsType,
   ) {
-    super(x, y, width, height, graphics, name);
+    super(x, y, width, height, graphics, AgentType.Player);
     this.screenWidth = graphics.getWidth();
     this.screenHeight = graphics.getHeight();
     this.input = input;

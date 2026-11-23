@@ -1,9 +1,10 @@
-import { type IAgent } from "./agent";
+import { AgentType, type IAgent } from "./agent";
+import type { LinkedList } from "./data-structures/linked-list";
 import type { Grid } from "./grid";
 
 // It could be preferrable to turn the loop into a class, so that it can retain some state
 export const mainLoop = (
-  agents: IAgent[],
+  agents: LinkedList<IAgent>,
   grid: Grid,
   elapsedTime: number,
   update = true,
@@ -39,14 +40,24 @@ const determineCameraX = (player: IAgent, grid: Grid) => {
   return 0;
 };
 
-const updateAgents = (agents: IAgent[], elapsedTime: number) => {
-  for (const agent of agents) {
-    agent.update(elapsedTime);
+const updateAgents = (agents: LinkedList<IAgent>, elapsedTime: number) => {
+  for (let agent = agents.first(); agent !== null; agent = agent.next) {
+    agent.element.update(elapsedTime);
   }
 };
 
-const drawAgents = (agents: IAgent[], grid: Grid) => {
-  const player = agents[0];
+const getPlayer = (agents: LinkedList<IAgent>) => {
+  for (let agent = agents.first(); agent !== null; agent = agent.next) {
+    if (agent.element.getType() === AgentType.Player) {
+      return agent.element;
+    }
+  }
+
+  throw new Error("Player agent not found");
+};
+
+const drawAgents = (agents: LinkedList<IAgent>, grid: Grid) => {
+  const player = getPlayer(agents)!;
   const cameraX = determineCameraX(player, grid);
 
   grid.draw(cameraX);
@@ -56,17 +67,22 @@ const drawAgents = (agents: IAgent[], grid: Grid) => {
     ((grid.getTilesPerScreenRow() + 1) * grid.getUnitSize()) / 2,
   );
 
-  for (const agent of agents) {
+  for (let agent = agents.first(); agent !== null; agent = agent.next) {
     // Cull agents that fall outside the viewing window
-    const agentX = agent.getX();
-    const playerX = player.getX();
+    const agentX = agent.element.getX();
+    let cutoffX = player.getX();
+    if (cutoffX < halfScreen) cutoffX = halfScreen;
+    if (cutoffX > grid.getRowSize() * grid.getUnitSize() - halfScreen) {
+      cutoffX = grid.getRowSize() * grid.getUnitSize() - halfScreen;
+    }
+
     if (
-      agentX + unitSize > playerX + halfScreen ||
-      agentX + unitSize < playerX - halfScreen
+      agentX + unitSize > cutoffX + halfScreen ||
+      agentX + unitSize < cutoffX - halfScreen
     ) {
       continue;
     }
 
-    agent.draw(-1 * cameraX);
+    agent.element.draw(-1 * cameraX);
   }
 };

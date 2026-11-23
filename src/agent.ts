@@ -1,4 +1,4 @@
-import type { Graphics } from "./graphics";
+import { Graphics } from "./graphics";
 
 type BoundingBox = {
   leftX: number;
@@ -15,7 +15,13 @@ export interface IAgent {
   getWidth: () => number;
   getHeight: () => number;
   getBoundingBox: () => BoundingBox;
-  getName: () => string;
+  getType: () => AgentType;
+}
+
+export enum AgentType {
+  Player = "player",
+  Baddy = "baddy",
+  Coin = "coin",
 }
 
 export abstract class Agent implements IAgent {
@@ -24,7 +30,8 @@ export abstract class Agent implements IAgent {
   width: number = 0;
   height: number = 0;
   graphics: Graphics;
-  name: string;
+  type: AgentType;
+  isActive: boolean;
 
   constructor(
     x: number,
@@ -32,18 +39,19 @@ export abstract class Agent implements IAgent {
     width: number,
     height: number,
     graphics: Graphics,
-    name: string,
+    type: AgentType,
   ) {
     this.x = x;
     this.y = y;
     this.width = width;
     this.height = height;
     this.graphics = graphics;
-    this.name = name;
+    this.type = type;
+    this.isActive = true;
   }
 
-  getName() {
-    return this.name;
+  getType() {
+    return this.type;
   }
 
   update(_: number) {}
@@ -69,6 +77,13 @@ export abstract class Agent implements IAgent {
   }
   getHeight() {
     return this.height;
+  }
+
+  getIsActive() {
+    return this.isActive;
+  }
+  setIsActive(isActive: boolean) {
+    this.isActive = isActive;
   }
 
   getBoundingBox() {
