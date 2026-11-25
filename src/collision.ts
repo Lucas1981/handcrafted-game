@@ -14,7 +14,7 @@ export const isAgentCollidingWithOtherAgent = (
     return false;
   }
 
-  if (bb1.topY < bb2.bottomY || bb2.topY < bb1.bottomY) {
+  if (bb1.topY > bb2.bottomY || bb2.topY > bb1.bottomY) {
     return false;
   }
 

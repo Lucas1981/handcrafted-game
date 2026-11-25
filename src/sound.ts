@@ -47,7 +47,6 @@ export class Sound {
   }
 
   enqueue(sound: Sounds) {
-    console.log("enqueueing ", sound);
     this.queue.push(sound);
   }
 

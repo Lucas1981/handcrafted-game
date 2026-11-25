@@ -1,19 +1,64 @@
 import { AgentType, type IAgent } from "./agent";
+import { isAgentCollidingWithOtherAgent } from "./collision";
 import type { LinkedList } from "./data-structures/linked-list";
 import type { Grid } from "./grid";
+import { GameState, type State } from "./state";
+import { width, height } from "./main";
+import type { Graphics } from "./graphics";
 
 // It could be preferrable to turn the loop into a class, so that it can retain some state
 export const mainLoop = (
-  agents: LinkedList<IAgent>,
-  grid: Grid,
+  graphics: Graphics,
+  state: State,
   elapsedTime: number,
   update = true,
 ) => {
+  const agents = state.getAgents()!;
+  const grid = state.getGrid()!;
+  const player = getPlayer(agents);
+
   if (update) {
     updateAgents(agents, elapsedTime);
+    handleCollisions(player, agents, state);
   }
 
-  drawAgents(agents, grid);
+  drawAgents(player, agents, grid);
+  drawUI(state, graphics);
+};
+
+const drawUI = (state: State, graphics: Graphics) => {
+  const coinsLeft = state.getCoinsLeft();
+  graphics.printText(width - 160, height - 20, `Coins left: ${coinsLeft}`);
+};
+
+const handleCollisions = (
+  player: IAgent,
+  agents: LinkedList<IAgent>,
+  state: State,
+) => {
+  for (let agent = agents.first(); agent !== null; agent = agent.next) {
+    if (agent.element.getType() === AgentType.Player) {
+      continue;
+    }
+
+    if (isAgentCollidingWithOtherAgent(player, agent.element)) {
+      const type = agent.element.getType();
+      switch (type) {
+        case AgentType.Baddy:
+          state.setGameState(GameState.Dead);
+          break;
+        case AgentType.Coin:
+          agent.element.setIsActive(false);
+          break;
+        default:
+          throw new Error("Illegal agent type");
+      }
+    }
+
+    if (state.getCoinsLeft() === 0) {
+      state.setGameState(GameState.Won);
+    }
+  }
 };
 
 const determineCameraX = (player: IAgent, grid: Grid) => {
@@ -56,8 +101,7 @@ const getPlayer = (agents: LinkedList<IAgent>) => {
   throw new Error("Player agent not found");
 };
 
-const drawAgents = (agents: LinkedList<IAgent>, grid: Grid) => {
-  const player = getPlayer(agents)!;
+const drawAgents = (player: IAgent, agents: LinkedList<IAgent>, grid: Grid) => {
   const cameraX = determineCameraX(player, grid);
 
   grid.draw(cameraX);
@@ -68,6 +112,10 @@ const drawAgents = (agents: LinkedList<IAgent>, grid: Grid) => {
   );
 
   for (let agent = agents.first(); agent !== null; agent = agent.next) {
+    if (!agent.element.getIsActive()) {
+      continue;
+    }
+
     // Cull agents that fall outside the viewing window
     const agentX = agent.element.getX();
     let cutoffX = player.getX();

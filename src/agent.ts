@@ -16,6 +16,8 @@ export interface IAgent {
   getHeight: () => number;
   getBoundingBox: () => BoundingBox;
   getType: () => AgentType;
+  getIsActive: () => boolean;
+  setIsActive: (isActive: boolean) => void;
 }
 
 export enum AgentType {

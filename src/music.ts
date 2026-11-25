@@ -1,6 +1,7 @@
 export class Music {
   offset = 0;
   audioCtx: AudioContext;
+  audioBuffer: AudioBuffer | null = null;
   trackSource: AudioBufferSourceNode | null = null;
 
   constructor() {
@@ -37,9 +38,13 @@ export class Music {
   async loadTrack(filepath: string) {
     const response = await fetch(`./assets/music/${filepath}.mp3`);
     const arrayBuffer = await response.arrayBuffer();
-    const audioBuffer = await this.audioCtx.decodeAudioData(arrayBuffer);
+    this.audioBuffer = await this.audioCtx.decodeAudioData(arrayBuffer);
+    this.reloadTrack();
+  }
+
+  reloadTrack() {
     this.trackSource = this.audioCtx.createBufferSource();
-    this.trackSource.buffer = audioBuffer;
+    this.trackSource.buffer = this.audioBuffer;
     this.trackSource.connect(this.audioCtx.destination);
   }
 }
